@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{4FF6A1CB-5FBF-46FA-80F2-22CDE2964D87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityService", "IdentityService\IdentityService.csproj", "{4FF6A1CB-5FBF-46FA-80F2-22CDE2964D87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{D1DFA55F-9F4F-408C-91EF-9B12F371ED8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{385EFD24-8035-4D7A-845D-EC52B9249551}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{4FF6A1CB-5FBF-46FA-80F2-22CDE2964D87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FF6A1CB-5FBF-46FA-80F2-22CDE2964D87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FF6A1CB-5FBF-46FA-80F2-22CDE2964D87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1DFA55F-9F4F-408C-91EF-9B12F371ED8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1DFA55F-9F4F-408C-91EF-9B12F371ED8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1DFA55F-9F4F-408C-91EF-9B12F371ED8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1DFA55F-9F4F-408C-91EF-9B12F371ED8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{385EFD24-8035-4D7A-845D-EC52B9249551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{385EFD24-8035-4D7A-845D-EC52B9249551}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{385EFD24-8035-4D7A-845D-EC52B9249551}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{385EFD24-8035-4D7A-845D-EC52B9249551}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
