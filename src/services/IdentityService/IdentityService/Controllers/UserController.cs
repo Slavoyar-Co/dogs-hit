@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using IdentityService.Controllers.Dtos;
 using Infrastructure.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers
@@ -16,17 +15,20 @@ namespace IdentityService.Controllers
             _userRepository = userRepository;
         }
   
-        [Route("{id:int}")]
+        [Route("{id:guid}")]
         [HttpGet]
-        public async Task<ActionResult<UserDto>> GetUser(int id)
+        public async Task<ActionResult<UserDto>> GetUser(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id);
+
             if (user is null)
             {
                 return NotFound();
             }
+
             return Ok(user);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDto userDto)
@@ -38,6 +40,7 @@ namespace IdentityService.Controllers
                 Email = userDto.Email,
                 Password = userDto.Password
             });
+
             return Ok(userDto);
         }
 

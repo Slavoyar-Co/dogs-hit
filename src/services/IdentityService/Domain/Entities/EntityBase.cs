@@ -2,7 +2,6 @@
 {
     public abstract record EntityBase
     {
-        public int Id { get; set; }
-        public DateTime CreateTime { get; set; }
+        public Guid Id { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Microsoft.AspNetCore.Identity;
 
 namespace IdentityService
 {
@@ -16,7 +17,6 @@ namespace IdentityService
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            var a = Configuration.GetConnectionString("defaultConnectionString");
             services.AddDatabaseRepositories(Configuration.GetConnectionString("defaultConnectionString"));
         }
         
