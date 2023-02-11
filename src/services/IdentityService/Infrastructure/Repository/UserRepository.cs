@@ -43,7 +43,7 @@ namespace Infrastructure.Repositroy
             return await Validate(x => x.Login.Equals(login), password);
         }
 
-        public async Task<User> GetByIdAsync(int id)
+        public async Task<User> GetByIdAsync(Guid id)
         {
             return await _identityDbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
         }

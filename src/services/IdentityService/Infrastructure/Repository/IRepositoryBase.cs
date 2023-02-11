@@ -3,9 +3,9 @@ using Domain.Enums;
 
 namespace Infrastructure.Repositroy
 {
-    public interface IRepositoryBase<T>
+    public interface IAsyncRepositoryBase<T>
     {
-        public Task<User> GetByIdAsync(int id);
+        public Task<User> GetByIdAsync(Guid id);
         public Task<User> UpdateAsync(T entity);
 
     }
