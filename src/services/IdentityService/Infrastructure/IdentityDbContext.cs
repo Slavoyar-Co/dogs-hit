@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using Infrastructure.Mappings;
+using Infrastructure.Mappings.Postgre;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -19,6 +19,7 @@ namespace Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.HasPostgresExtension("uuid-ossp");
             builder.ApplyConfiguration(new UserMapping());
         }
 

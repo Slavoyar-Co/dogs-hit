@@ -33,13 +33,22 @@ namespace IdentityService.Controllers
         [HttpPost]
         public async Task<ActionResult<UserDto>> RegisterUser(UserDto userDto)
         {
-            var user = await _userRepository.RegisterUserAsync(new User
+            try
             {
-                Login = userDto.Login,
-                Name = userDto.Name,
-                Email = userDto.Email,
-                Password = userDto.Password
-            });
+                var user = await _userRepository.RegisterUserAsync(new User
+                {
+                    Login = userDto.Login,
+                    Name = userDto.Name,
+                    Email = userDto.Email,
+                    Password = userDto.Password
+                });
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
 
             return Ok(userDto);
         }

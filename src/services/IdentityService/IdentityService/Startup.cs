@@ -17,7 +17,7 @@ namespace IdentityService
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.AddDatabaseRepositories(Configuration.GetConnectionString("defaultConnectionString"));
+            services.AddDatabaseRepositories(Configuration.GetConnectionString("defaultConnectionString")!);
         }
         
         public void Configure(WebApplication app)

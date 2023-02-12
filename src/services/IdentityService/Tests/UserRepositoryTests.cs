@@ -1,8 +1,3 @@
-using Domain.Entities;
-using Domain.Enums;
-using Infrastructure;
-using Infrastructure.Repositroy;
-using Microsoft.EntityFrameworkCore;
 
 namespace Tests
 {
