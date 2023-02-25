@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using IdentityService.Controllers.Dtos;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Mvc;
@@ -31,27 +32,29 @@ namespace IdentityService.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<UserDto>> RegisterUser(UserDto userDto)
+        public async Task<ActionResult<UserDto>> RegisterUser([FromBody] UserDto userDto)
         {
-            try
+
+            var user = new User
             {
-                var user = await _userRepository.RegisterUserAsync(new User
-                {
-                    Login = userDto.Login,
-                    Name = userDto.Name,
-                    Email = userDto.Email,
-                    Password = userDto.Password
-                });
-            }
-            catch (Exception e)
+                Id = Guid.NewGuid(),
+                UserName = userDto.Login,
+                Name = userDto.Name,
+                Email = userDto.Email,
+                Password = userDto.Password
+            };
+
+            var status = await _userRepository.RegisterUserAsync(user);
+
+            if (status == ERegistrationStatus.Success)
             {
-
-                throw;
+                userDto.Id = user.Id;
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id}, userDto);
             }
 
-
-            return Ok(userDto);
+            return BadRequest();
         }
+
 
     }
 }

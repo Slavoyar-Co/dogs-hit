@@ -1,13 +1,14 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using Infrastructure.Repositroy;
+using Infrastructure.ResponseEntities;
 
 namespace Infrastructure.Repository
 {
     public interface IUserRepository : IAsyncRepositoryBase<User>
     {
-        public Task<EAuthorizationStatus> ValidateUserCredentialsByLoginAsync(string login, string password);
-        public Task<EAuthorizationStatus> ValidateUserCredentialsByEmailAsync(string email, string password);
+        public Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password);
+        public Task<UserRepositoryResponse> GetByEmailAsync(string email, string password);
         public Task<ERegistrationStatus> RegisterUserAsync(User user);
     }
 }

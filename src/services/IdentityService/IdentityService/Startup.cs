@@ -1,5 +1,5 @@
-﻿using Infrastructure;
-using Microsoft.AspNetCore.Identity;
+﻿using IdentityService.ServiceExtensions;
+using Infrastructure;
 
 namespace IdentityService
 {
@@ -17,7 +17,8 @@ namespace IdentityService
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.AddDatabaseRepositories(Configuration.GetConnectionString("defaultConnectionString")!);
+            services.AddAuthenticationProviders("test");
+            services.AddDatabaseRepositories(Configuration);
         }
         
         public void Configure(WebApplication app)
@@ -33,7 +34,7 @@ namespace IdentityService
             }
             app.UseHttpsRedirection();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();

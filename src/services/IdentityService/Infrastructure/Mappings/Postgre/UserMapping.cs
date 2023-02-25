@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Infrastructure.Mappings.Postgre
 {
-    public class UserMapping : IEntityTypeConfiguration<User>
+    public class PostgreUserMapping : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> user)
         {
@@ -23,25 +23,21 @@ namespace Infrastructure.Mappings.Postgre
                 .HasColumnName("name")
                 .HasColumnType("varchar")
                 .HasDefaultValue("incognito")
-                .HasMaxLength(50)
                 .IsRequired(true);
 
             user.Property(u => u.Email)
                 .HasColumnName("email")
                 .HasColumnType("varchar")
                 .HasDefaultValue(null)
-                .HasMaxLength(50)
                 .IsRequired(false);
 
             user.Property(u => u.Password)
                 .HasColumnName("password")
                 .HasColumnType("varchar")
-                .HasMaxLength(50)
                 .IsRequired(true);
 
-            user.Property(u => u.Login).HasColumnName("login")
+            user.Property(u => u.UserName).HasColumnName("login")
                 .HasColumnType("varchar")
-                .HasMaxLength(50)
                 .IsRequired(true);
 
             user.Ignore(u => u.CreateTime);

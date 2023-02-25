@@ -4,7 +4,7 @@
     {
         EmailError = 1,
         LoginError,
-        PasswordError,
+        WrongPassword,
         Success
     }
 }
