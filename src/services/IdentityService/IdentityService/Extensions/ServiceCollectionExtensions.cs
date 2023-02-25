@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using IdentityService.Implementations;
+using IdentityService.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -8,6 +10,8 @@ namespace IdentityService.ServiceExtensions
     {
         public static IServiceCollection AddAuthenticationProviders(this IServiceCollection services, string key)
         {
+            services.AddTransient<IJwtAuthentificationManager, JwtAuthentificationManager>();
+
             services.AddAuthentication(options =>
             {
 

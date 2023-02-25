@@ -17,6 +17,44 @@ namespace Infrastructure.Repositroy
             _identityDbContext = identityDbContext;
         }
 
+        public async Task<UserRepositoryResponse> GetByEmailAsync(string email, string password)
+        {
+            return await Validate(x => x.Email!.Equals(email), password);
+        }
+
+
+        public async Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password)
+        {
+            return await Validate(x => x.UserName.Equals(username), password);
+        }
+
+
+        public async Task<User> GetByIdAsync(Guid id)
+        {
+            return await _identityDbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+        
+
+        public async Task<ERegistrationStatus> RegisterUserAsync(User user)
+        {
+            if (await CheckIfExits(user))
+            {
+                return ERegistrationStatus.AlreadyExists;
+            }
+            user.Password = CryptHelper.HashPassword(user.Password);
+            await _identityDbContext.Users.AddAsync(user);
+            await _identityDbContext.SaveChangesAsync();
+            return ERegistrationStatus.Success;
+        }
+
+
+        public async Task<User> UpdateAsync(User user)
+        {
+            _identityDbContext.Update(user);
+            await _identityDbContext.SaveChangesAsync();
+            return user;
+        }
+
         private async Task<UserRepositoryResponse> Validate(Expression<Func<User, bool>> predicate, string password)
         {
             var user = await _identityDbContext.Users.Where(predicate).FirstOrDefaultAsync();
@@ -31,44 +69,10 @@ namespace Infrastructure.Repositroy
 
             if (!isVerified)
             {
-                return new UserRepositoryResponse(user, EAuthorizationStatus.WrongPassword); 
+                return new UserRepositoryResponse(user, EAuthorizationStatus.WrongPassword);
             }
 
             return new UserRepositoryResponse(user, EAuthorizationStatus.Success);
-        }
-
-        public async Task<UserRepositoryResponse> GetByEmailAsync(string email, string password)
-        {
-            return await Validate(x => x.Email.Equals(email), password);
-        }
-
-        public async Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password)
-        {
-            return await Validate(x => x.UserName.Equals(username), password);
-        }
-
-        public async Task<User> GetByIdAsync(Guid id)
-        {
-            return await _identityDbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
-        }
-        
-        public async Task<ERegistrationStatus> RegisterUserAsync(User user)
-        {
-            if (await CheckIfExits(user))
-            {
-                return ERegistrationStatus.AlreadyExists;
-            }
-            user.Password = CryptHelper.HashPassword(user.Password);
-            await _identityDbContext.Users.AddAsync(user);
-            await _identityDbContext.SaveChangesAsync();
-            return ERegistrationStatus.Success;
-        }
-
-        public async Task<User> UpdateAsync(User user)
-        {
-            _identityDbContext.Update(user);
-            await _identityDbContext.SaveChangesAsync();
-            return user;
         }
 
         private async Task<bool> CheckIfExits(User user)
