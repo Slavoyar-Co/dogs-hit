@@ -1,7 +1,7 @@
 ﻿using BCrypt.Net;
 using Domain.Entities;
 
-namespace Infrastructure.PasswordCrypters
+namespace Infrastructure.Crypt
 {
     public static class CryptHelper
     {

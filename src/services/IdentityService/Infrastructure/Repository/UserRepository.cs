@@ -1,7 +1,8 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
-using Infrastructure.PasswordCrypters;
+using Infrastructure.Crypt;
 using Infrastructure.Repository;
+using Infrastructure.ResponseEntities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -16,31 +17,34 @@ namespace Infrastructure.Repositroy
             _identityDbContext = identityDbContext;
         }
 
-        private async Task<EAuthorizationStatus> Validate(Expression<Func<User, bool>> predicate, string password)
+        private async Task<UserRepositoryResponse> Validate(Expression<Func<User, bool>> predicate, string password)
         {
             var user = await _identityDbContext.Users.Where(predicate).FirstOrDefaultAsync();
+
             if (user is null)
             {
                 //TODO check predicate assign variable
-                return EAuthorizationStatus.LoginError; 
+                return new UserRepositoryResponse(user, EAuthorizationStatus.LoginError);
             }
 
             var isVerified = CryptHelper.VerifyPassword(password, user.Password);
+
             if (!isVerified)
             {
-                return EAuthorizationStatus.PasswordError;
+                return new UserRepositoryResponse(user, EAuthorizationStatus.WrongPassword); 
             }
-            return EAuthorizationStatus.Success;
+
+            return new UserRepositoryResponse(user, EAuthorizationStatus.Success);
         }
 
-        public async Task<EAuthorizationStatus> ValidateUserCredentialsByEmailAsync(string email, string password)
+        public async Task<UserRepositoryResponse> GetByEmailAsync(string email, string password)
         {
             return await Validate(x => x.Email.Equals(email), password);
         }
 
-        public async Task<EAuthorizationStatus> ValidateUserCredentialsByLoginAsync(string login, string password)
+        public async Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password)
         {
-            return await Validate(x => x.Login.Equals(login), password);
+            return await Validate(x => x.UserName.Equals(username), password);
         }
 
         public async Task<User> GetByIdAsync(Guid id)

@@ -20,7 +20,7 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.HasPostgresExtension("uuid-ossp");
-            builder.ApplyConfiguration(new UserMapping());
+            builder.ApplyConfiguration(new PostgreUserMapping());
         }
 
     }
