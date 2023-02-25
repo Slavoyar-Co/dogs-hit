@@ -2,6 +2,6 @@
 {
     public interface IJwtAuthentificationManager
     {
-        public Task<string> AuthentificateAsync(string username, string password);
+        public Task<string?> AuthentificateAsync(string username, string password);
     }
 }

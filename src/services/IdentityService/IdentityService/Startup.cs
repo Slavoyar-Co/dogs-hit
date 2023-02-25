@@ -1,5 +1,6 @@
 ﻿using IdentityService.ServiceExtensions;
 using Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace IdentityService
 {
@@ -17,8 +18,8 @@ namespace IdentityService
             services.AddControllers();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-            services.AddAuthenticationProviders("test");
-            services.AddDatabaseRepositories(Configuration);
+            services.AddAuthenticationProviders(Configuration.GetSection("Keys:JwtKey").Value!);
+            services.AddDatabaseRepositories(Configuration.GetConnectionString("defaultConnectionString")!);
         }
         
         public void Configure(WebApplication app)
