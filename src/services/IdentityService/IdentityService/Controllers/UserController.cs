@@ -9,20 +9,22 @@ namespace IdentityService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class AuthorizationController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
+        private readonly ILogger<AuthorizationController> _logger;
 
         private readonly IJwtAuthentificationManager _jwtAuthentificationManager;
 
         private readonly IUserRepository _userRepository;
-        public UserController(ILogger<UserController> logger, IUserRepository userRepository, 
+        public AuthorizationController(ILogger<AuthorizationController> logger, IUserRepository userRepository, 
             IJwtAuthentificationManager jwtAuthentificationManager)
         {
             _logger = logger;
             _userRepository = userRepository;
             _jwtAuthentificationManager = jwtAuthentificationManager;
         }
+
+        //TODO add logger wrapper
 
         [Route("{id:guid}")]
         [HttpGet]
@@ -43,7 +45,7 @@ namespace IdentityService.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<UserDto>> RegisterUser([FromBody] UserDto userDto)
+        public async Task<ActionResult<RegisterUserDto>> RegisterUser([FromBody] RegisterUserDto userDto)
         {
             _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: register attempt");
 
@@ -51,7 +53,7 @@ namespace IdentityService.Controllers
             var user = new User
             {
                 Id = Guid.NewGuid(),
-                UserName = userDto.Login,
+                Login = userDto.Login,
                 Name = userDto.Name,
                 Email = userDto.Email,
                 Password = userDto.Password
@@ -66,12 +68,12 @@ namespace IdentityService.Controllers
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id}, userDto);
             }
 
-            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: register failure");
+            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: register failure : ${status.ToString()}");
             return BadRequest();
         }
 
         [HttpPost("bearer-token")]
-        public async Task<ActionResult<string>> Authentificate([FromBody] UserDto userDto)
+        public async Task<ActionResult<string>> Authentificate([FromBody] LogInUserDto userDto)
         {
             _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: authentication attempt");
 

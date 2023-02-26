@@ -19,13 +19,13 @@ namespace Infrastructure.Repositroy
 
         public async Task<UserRepositoryResponse> GetByEmailAsync(string email, string password)
         {
-            return await Validate(x => x.Email!.Equals(email), password);
+            return await ValidateCredentials(x => x.Email!.Equals(email), password);
         }
 
 
         public async Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password)
         {
-            return await Validate(x => x.UserName.Equals(username), password);
+            return await ValidateCredentials(x => x.Login.Equals(username), password);
         }
 
 
@@ -33,11 +33,10 @@ namespace Infrastructure.Repositroy
         {
             return await _identityDbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
-        
 
         public async Task<ERegistrationStatus> RegisterUserAsync(User user)
         {
-            if (await CheckIfExits(user))
+            if (await CheckIfUserExits(user))
             {
                 return ERegistrationStatus.AlreadyExists;
             }
@@ -55,7 +54,7 @@ namespace Infrastructure.Repositroy
             return user;
         }
 
-        private async Task<UserRepositoryResponse> Validate(Expression<Func<User, bool>> predicate, string password)
+        private async Task<UserRepositoryResponse> ValidateCredentials(Expression<Func<User, bool>> predicate, string password)
         {
             var user = await _identityDbContext.Users.Where(predicate).FirstOrDefaultAsync();
 
@@ -75,9 +74,9 @@ namespace Infrastructure.Repositroy
             return new UserRepositoryResponse(user, EAuthorizationStatus.Success);
         }
 
-        private async Task<bool> CheckIfExits(User user)
+        private async Task<bool> CheckIfUserExits(User user)
         {
-            return await GetByIdAsync(user.Id) != null;
+            return await _identityDbContext.Users.Where(x => x.Login== user.Login || x.Email == user.Email).AnyAsync();
         }
     }
 }

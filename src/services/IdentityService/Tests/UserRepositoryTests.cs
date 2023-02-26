@@ -24,7 +24,7 @@ namespace Tests
                 Name = "TestName",
                 CreateTime = DateTime.UtcNow,
                 Email = "TestEmail",
-                UserName = "TestLogin",
+                Login = "TestLogin",
                 Password = "TestPassword"
             });
 
