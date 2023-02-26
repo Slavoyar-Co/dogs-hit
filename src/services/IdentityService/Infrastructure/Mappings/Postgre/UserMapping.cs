@@ -35,7 +35,7 @@ namespace Infrastructure.Mappings.Postgre
                 .HasColumnType("varchar")
                 .IsRequired(true);
 
-            user.Property(u => u.UserName).HasColumnName("login")
+            user.Property(u => u.Login).HasColumnName("login")
                 .HasColumnType("varchar")
                 .IsRequired(true);
 
