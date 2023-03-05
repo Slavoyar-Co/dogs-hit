@@ -14,26 +14,23 @@ namespace IdentityService.ServiceExtensions
 
             services.AddAuthentication(options =>
             {
-
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
             })
-            .AddJwtBearer(options => {
+            .AddJwtBearer(options =>
+            {
 
-                options.RequireHttpsMetadata = false;
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key)),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    LifetimeValidator = LifetimeValidator
                 };
-            })
-            .AddCookie(options =>
-            {
-                options.LoginPath = "/api/authorization/signin";
             });
 
 
@@ -41,5 +38,21 @@ namespace IdentityService.ServiceExtensions
 
             return services;
         }
+
+        private static LifetimeValidator LifetimeValidator = 
+            (DateTime? notBefore, 
+            DateTime? expires, 
+            SecurityToken securityToken, 
+            TokenValidationParameters validationParameters) =>
+        {
+            if (expires != null && notBefore != null)
+            {
+                if (DateTime.UtcNow < expires.Value.ToUniversalTime() & DateTime.UtcNow > notBefore.Value.ToUniversalTime())
+                {
+                    return true; 
+                }
+            }
+            return false; 
+        };
     }
 }
