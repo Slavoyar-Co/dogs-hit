@@ -3,6 +3,8 @@ using Domain.Enums;
 using IdentityService.Controllers.Dtos;
 using IdentityService.Services;
 using Infrastructure.Repository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityService.Controllers
@@ -26,19 +28,17 @@ namespace IdentityService.Controllers
 
         //TODO add logger wrapper
 
-        [Route("{id:guid}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Route("login")]
         [HttpGet]
-        public async Task<ActionResult<UserDto>> GetUser(Guid id)
+        public ActionResult<UserDto> GetUser()
         {
-            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: GET user attempt");
-
-            var user = await _userRepository.GetByIdAsync(id);
-
-            if (user is null)
+            var user = new UserDto
             {
-                _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: user not found");
-                return NotFound();
-            }
+                Name = User?.Identity?.Name,
+                Id = Guid.Parse(User!.Claims.First(x => x.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value!),
+
+            };
 
             return Ok(user);
         }
@@ -72,6 +72,7 @@ namespace IdentityService.Controllers
             return BadRequest();
         }
 
+        [AllowAnonymous]
         [HttpPost("bearer-token")]
         public async Task<ActionResult<string>> Authentificate([FromBody] LogInUserDto userDto)
         {
@@ -88,6 +89,9 @@ namespace IdentityService.Controllers
 
             return Ok(token);
         }
+
+
+
 
     }
 }
