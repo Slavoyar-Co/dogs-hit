@@ -13,22 +13,18 @@ namespace IdentityService.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
-        private readonly ILogger<AuthorizationController> _logger;
-
         private readonly IJwtAuthentificationManager _jwtAuthentificationManager;
 
         private readonly IUserRepository _userRepository;
-        public AuthorizationController(ILogger<AuthorizationController> logger, IUserRepository userRepository, 
+        public AuthorizationController(IUserRepository userRepository, 
             IJwtAuthentificationManager jwtAuthentificationManager)
         {
-            _logger = logger;
             _userRepository = userRepository;
             _jwtAuthentificationManager = jwtAuthentificationManager;
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Route("user")]
-        [HttpGet]
+        [HttpGet("user")]
         public ActionResult<UserDto> GetUser()
         {
             var user = new UserDto
@@ -45,9 +41,6 @@ namespace IdentityService.Controllers
         [HttpPost]
         public async Task<ActionResult<RegisterUserDto>> RegisterUser([FromBody] RegisterUserDto userDto)
         {
-            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: register attempt");
-
-            //TODO add automapper
             var user = new User
             {
                 Id = Guid.NewGuid(),
@@ -61,12 +54,10 @@ namespace IdentityService.Controllers
 
             if (status == ERegistrationStatus.Success)
             {
-                _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: register success");
                 userDto.Id = user.Id;
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id}, userDto);
             }
 
-            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: register failure : ${status.ToString()}");
             return BadRequest();
         }
 
@@ -74,8 +65,6 @@ namespace IdentityService.Controllers
         [HttpPost("bearer-token")]
         public async Task<ActionResult<string>> Authentificate([FromBody] LogInUserDto userDto)
         {
-            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: authentication attempt");
-
             var token = await _jwtAuthentificationManager.AuthentificateAsync(userDto.Login, userDto.Password);
 
             if (token is null)
@@ -83,13 +72,7 @@ namespace IdentityService.Controllers
                 return Unauthorized();
             }
 
-            _logger.LogInformation($"{DateTime.UtcNow:hh:mm:ss}: successful authentication");
-
             return Ok(token);
         }
-
-
-
-
     }
 }
