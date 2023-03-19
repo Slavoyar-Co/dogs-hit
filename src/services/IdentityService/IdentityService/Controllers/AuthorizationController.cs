@@ -26,10 +26,8 @@ namespace IdentityService.Controllers
             _jwtAuthentificationManager = jwtAuthentificationManager;
         }
 
-        //TODO add logger wrapper
-
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Route("login")]
+        [Route("user")]
         [HttpGet]
         public ActionResult<UserDto> GetUser()
         {
