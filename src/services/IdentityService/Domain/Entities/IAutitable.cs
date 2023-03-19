@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public interface IAutitable
+    public interface IAuditable
     {
         public DateTime? CreateTime { get; set; }
     }

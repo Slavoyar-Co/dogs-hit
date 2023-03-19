@@ -1,6 +1,6 @@
 ﻿namespace Domain.Entities
 {
-    public record User : EntityBase, IAutitable
+    public record User : EntityBase, IAuditable
     {
         public string Name { get; set; } = null!; 
         public string? Email { get; set; }
