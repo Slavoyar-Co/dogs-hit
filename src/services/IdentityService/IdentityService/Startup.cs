@@ -62,6 +62,7 @@ namespace IdentityService
             {
                 app.UseHsts();
             }
+            app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
