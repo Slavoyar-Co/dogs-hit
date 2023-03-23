@@ -27,6 +27,9 @@ namespace IdentityService.Controllers
         [HttpGet("user")]
         public ActionResult<UserDto> GetUser()
         {
+
+
+
             var user = new UserDto
             {
                 Name = User?.Identity?.Name,
