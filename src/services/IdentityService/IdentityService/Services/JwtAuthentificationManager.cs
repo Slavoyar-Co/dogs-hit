@@ -25,7 +25,7 @@ namespace IdentityService.Implementations
         public async Task<string?> AuthentificateAsync(string username, string password)
         {
             var response = await _userRepository.GetByUserNameAsync(username, password);
-            if(response.AuthorizationStatus == EAuthorizationStatus.Success)
+            if (response.AuthorizationStatus == EAuthorizationStatus.Success)
             {
                 var user = response.User!;
                 var tokenHandler = new JwtSecurityTokenHandler();

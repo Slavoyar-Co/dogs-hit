@@ -76,7 +76,7 @@ namespace Infrastructure.Repositroy
 
         private async Task<bool> CheckIfUserExits(User user)
         {
-            return await _identityDbContext.Users.Where(x => x.Login== user.Login || x.Email == user.Email).AnyAsync();
+            return await _identityDbContext.Users.Where(x => x.Login == user.Login || x.Email == user.Email).AnyAsync();
         }
     }
 }

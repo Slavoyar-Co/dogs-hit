@@ -8,7 +8,7 @@ namespace Infrastructure
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddDatabaseRepositories(this IServiceCollection services, string connectionString) 
+        public static IServiceCollection AddDatabaseRepositories(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<IdentityDbContext>(options => options.UseNpgsql(connectionString));
             services.AddTransient<IUserRepository, UserRepository>();

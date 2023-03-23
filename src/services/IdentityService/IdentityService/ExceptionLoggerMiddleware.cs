@@ -10,7 +10,7 @@ namespace IdentityService
         public ExceptionLoggerMiddleware(RequestDelegate next, ILogger logger)
         {
             this.next = next;
-            _logger = logger;   
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -21,12 +21,12 @@ namespace IdentityService
             {
                 await next(context);
             }
-            catch (Exception error) 
+            catch (Exception error)
             {
                 switch (error) //todo add possible exceptions and handle them
                 {
                     case AuthenticationException:
-                        
+
                         if (context.User.Identity is { IsAuthenticated: true })
                         {
                         }

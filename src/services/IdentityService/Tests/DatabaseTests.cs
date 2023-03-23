@@ -21,8 +21,8 @@ namespace Tests
 
             using (IdentityDbContext dbContext = new IdentityDbContext(dbContextOptions))
             {
-               var response = await dbContext.Database.CanConnectAsync();
-               
+                var response = await dbContext.Database.CanConnectAsync();
+
                 Assert.True(response);
             }
         }
