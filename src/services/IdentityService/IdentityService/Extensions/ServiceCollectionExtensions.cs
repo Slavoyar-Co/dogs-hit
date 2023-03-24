@@ -39,20 +39,20 @@ namespace IdentityService.ServiceExtensions
             return services;
         }
 
-        private static LifetimeValidator LifetimeValidator = 
-            (DateTime? notBefore, 
-            DateTime? expires, 
-            SecurityToken securityToken, 
+        private static LifetimeValidator LifetimeValidator =
+            (DateTime? notBefore,
+            DateTime? expires,
+            SecurityToken securityToken,
             TokenValidationParameters validationParameters) =>
         {
             if (expires != null && notBefore != null)
             {
                 if (DateTime.UtcNow < expires.Value.ToUniversalTime() & DateTime.UtcNow > notBefore.Value.ToUniversalTime())
                 {
-                    return true; 
+                    return true;
                 }
             }
-            return false; 
+            return false;
         };
     }
 }

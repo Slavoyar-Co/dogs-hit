@@ -10,7 +10,7 @@ namespace Infrastructure
         public DbSet<User> Users { get; init; } = null!;
 
         public IdentityDbContext(DbContextOptions<IdentityDbContext> options) : base(options)
-        {}
+        { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

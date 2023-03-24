@@ -16,7 +16,7 @@ namespace IdentityService.Controllers
         private readonly IJwtAuthentificationManager _jwtAuthentificationManager;
 
         private readonly IUserRepository _userRepository;
-        public AuthorizationController(IUserRepository userRepository, 
+        public AuthorizationController(IUserRepository userRepository,
             IJwtAuthentificationManager jwtAuthentificationManager)
         {
             _userRepository = userRepository;
@@ -27,6 +27,9 @@ namespace IdentityService.Controllers
         [HttpGet("user")]
         public ActionResult<UserDto> GetUser()
         {
+
+
+
             var user = new UserDto
             {
                 Name = User?.Identity?.Name,
@@ -55,7 +58,7 @@ namespace IdentityService.Controllers
             if (status == ERegistrationStatus.Success)
             {
                 userDto.Id = user.Id;
-                return CreatedAtAction(nameof(GetUser), new { id = user.Id}, userDto);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userDto);
             }
 
             return BadRequest();
