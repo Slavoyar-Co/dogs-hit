@@ -1,14 +1,12 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
-
 using IdentityService.Controllers.Dtos;
-using IdentityService.Services;
 using Infrastructure.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Google.Apis.Oauth2.v2;
 using IdentityService.Services.Models;
+using IdentityService.Services.Contracts;
 
 namespace IdentityService.Controllers
 {
@@ -34,7 +32,7 @@ namespace IdentityService.Controllers
         {
             var user = new UserDto
             {
-                Name = User?.Identity?.Name,
+                Name = User?.Identity?.Name!,
                 Id = Guid.Parse(User!.Claims.First(x => x.Type.Equals("id", StringComparison.OrdinalIgnoreCase)).Value!),
 
             };
@@ -60,12 +58,14 @@ namespace IdentityService.Controllers
             if (status == ERegistrationStatus.Success)
             {
                 userDto.Id = user.Id;
+                //Redirect to ensure user is created
                 return CreatedAtAction(nameof(GetUser), new { id = user.Id}, userDto);
             }
 
             return BadRequest();
         }
          
+
         [AllowAnonymous]
         [HttpGet("bearer-token")]
         public async Task<ActionResult<string>> Authentificate([FromBody] LogInUserDto userDto)
@@ -85,10 +85,9 @@ namespace IdentityService.Controllers
         [HttpGet("google")]
         public async Task<ActionResult<string>> SignInWithGoogle([FromQuery] GoogleSignInModel userModel)
         {
+            var flowToken = await _googleAuthService.GetFlowToken(userModel);
 
-            var tokenResponse = await _googleAuthService.GetFlowToken(userModel);
-
-            var token = await _authenticationService.AuthenticateViaGoogleAsync(tokenResponse.IdToken);
+            var token = await _authenticationService.AuthenticateViaGoogleAsync(flowToken.IdToken);
 
             if (token is null)
             {

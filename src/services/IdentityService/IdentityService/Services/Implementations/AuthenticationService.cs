@@ -1,8 +1,9 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using IdentityService.Services.Contracts;
 using Infrastructure.Repository;
 
-namespace IdentityService.Services
+namespace IdentityService.Services.Implementations
 {
     public class AuthenticationService : IAuthenticationService
     {
@@ -34,26 +35,26 @@ namespace IdentityService.Services
         {
             var userInfo = await _googleAuthManager.ValidateTokenAsync(token);
 
-            if(userInfo is null)
+            if (userInfo is null)
             {
                 return null;//TODO refactor
             }
 
             var user = await _userRepository.GetByUserNameAsync(userInfo.Name);
-            if (user is null) 
+
+            if (user is null)
             {
-                user = new User 
+                user = new User
                 {
                     Id = Guid.NewGuid(),
                     Name = userInfo.Name,
                     Login = userInfo.Name,
-                    Email = userInfo.Email 
+                    Email = userInfo.Email
                 };
-                await _userRepository.CreateUserAsync(user);
+                await _userRepository.CreateExternalUserAsync(user);
             }
 
-
-            return await _jwtManager.GenerateAccessTokenAsync(user); 
+            return await _jwtManager.GenerateAccessTokenAsync(user);
         }
     }
 }

@@ -12,5 +12,6 @@ namespace Infrastructure.Repository
         public Task<User> GetByUserNameAsync(string userName);
         public Task<User> GetByEmailAsync(string email);
         public Task<ERegistrationStatus> CreateUserAsync(User user);
+        public Task<ERegistrationStatus> CreateExternalUserAsync(User user);
     }
 }

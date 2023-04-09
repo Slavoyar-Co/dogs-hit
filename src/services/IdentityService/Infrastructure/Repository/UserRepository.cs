@@ -34,15 +34,33 @@ namespace Infrastructure.Repositroy
             return await _identityDbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
+
         public async Task<ERegistrationStatus> CreateUserAsync(User user)
         {
             if (await CheckIfUserExits(user))
             {
                 return ERegistrationStatus.AlreadyExists;
             }
+
             user.Password = CryptHelper.HashPassword(user.Password);
             await _identityDbContext.Users.AddAsync(user);
             await _identityDbContext.SaveChangesAsync();
+
+            return ERegistrationStatus.Success;
+        }
+
+
+        public async Task<ERegistrationStatus> CreateExternalUserAsync(User user)
+        {
+            if (await CheckIfUserExits(user))
+            {
+                return ERegistrationStatus.AlreadyExists;
+            }
+
+            user.Password = CryptHelper.HashPassword(Guid.NewGuid().ToString());
+            await _identityDbContext.Users.AddAsync(user);
+            await _identityDbContext.SaveChangesAsync();
+
             return ERegistrationStatus.Success;
         }
 
@@ -51,8 +69,10 @@ namespace Infrastructure.Repositroy
         {
             _identityDbContext.Update(user);
             await _identityDbContext.SaveChangesAsync();
+
             return user;
         }
+
 
         private async Task<UserRepositoryResponse> ValidateCredentials(Expression<Func<User, bool>> predicate, string password)
         {
@@ -74,19 +94,16 @@ namespace Infrastructure.Repositroy
             return new UserRepositoryResponse(user, EAuthorizationStatus.Success);
         }
 
-        private async Task<bool> CheckIfUserExits(User user)
-        {
-            return await _identityDbContext.Users.Where(x => x.Login== user.Login || x.Email == user.Email).AnyAsync();
-        }
 
-        public async Task<User> GetByUserNameAsync(string userName)
-        {
-            return await _identityDbContext.Users.FirstOrDefaultAsync(x => x.Name.Equals(userName));
-        }
+        private async Task<bool> CheckIfUserExits(User user) =>  
+            await _identityDbContext.Users.Where(x => x.Login== user.Login || x.Email == user.Email).AnyAsync();
 
-        public async Task<User> GetByEmailAsync(string email)
-        {
-            return await _identityDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
-        }
+
+        public async Task<User> GetByUserNameAsync(string userName) => 
+            await _identityDbContext.Users.FirstOrDefaultAsync(x => x.Name.Equals(userName));
+
+
+        public async Task<User> GetByEmailAsync(string email) =>
+            await _identityDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
     }
 }

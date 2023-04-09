@@ -1,14 +1,15 @@
-﻿using IdentityService.Implementations;
-using IdentityService.Services;
+﻿using IdentityService.Services.Contracts;
+using IdentityService.Services.Implementations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace IdentityService.ServiceExtensions
 {
     public static class AuthenticationServiceCollectionExtensions
     {
-        public static IServiceCollection AddAuthenticationProviders(this IServiceCollection services, string key)
+        public static IServiceCollection AddAuthenticationProviders(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IJwtManager, JwtManager>();
             services.AddSingleton<IGoogleAuthManager, GoogleAuthManager>();
@@ -22,6 +23,7 @@ namespace IdentityService.ServiceExtensions
             })
             .AddJwtBearer(options =>
             {
+                string key = configuration.GetSection("Keys:JwtKey").Value!;
 
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -34,13 +36,40 @@ namespace IdentityService.ServiceExtensions
                     LifetimeValidator = LifetimeValidator
                 };
             })
-            .AddGoogle(options =>
+            .AddGoogle(googleOptions =>
             {
-                options.ClientId = "922665812793-7cbic7c0807hcqljk06q7k9mtdet21p2.apps.googleusercontent.com";
-                options.ClientSecret = "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";
-            }); 
+                googleOptions.ClientId = configuration["Authentication:Google:ClientId"]!;
+                googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
+            });
 
 
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Identity API", Version = "v1" });
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "Enter a valid token",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                     }
+                 });
+            });
 
 
             return services;
