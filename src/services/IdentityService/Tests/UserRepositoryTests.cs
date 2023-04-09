@@ -20,7 +20,7 @@ namespace Tests
         [Fact]
         public async void UserRepository_RegisterUserAsync_Success()
         {
-            var status = await _userRepository.RegisterUserAsync(new User { 
+            var status = await _userRepository.CreateUserAsync(new User { 
                 Name = "TestName",
                 CreateTime = DateTime.UtcNow,
                 Email = "TestEmail",

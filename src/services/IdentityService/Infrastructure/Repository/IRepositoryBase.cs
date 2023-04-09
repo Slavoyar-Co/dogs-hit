@@ -1,12 +1,9 @@
-﻿using Domain.Entities;
-using Domain.Enums;
-
-namespace Infrastructure.Repositroy
+﻿namespace Infrastructure.Repositroy
 {
     public interface IAsyncRepositoryBase<T>
     {
-        public Task<User> GetByIdAsync(Guid id);
-        public Task<User> UpdateAsync(T entity);
+        public Task<T> GetByIdAsync(Guid id);
+        public Task<T> UpdateAsync(T entity);
 
     }
 }

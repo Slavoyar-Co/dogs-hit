@@ -17,13 +17,13 @@ namespace Infrastructure.Repositroy
             _identityDbContext = identityDbContext;
         }
 
-        public async Task<UserRepositoryResponse> GetByEmailAsync(string email, string password)
+        public async Task<UserRepositoryResponse> GetByEmailAndPasswordAsync(string email, string password)
         {
             return await ValidateCredentials(x => x.Email!.Equals(email), password);
         }
 
 
-        public async Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password)
+        public async Task<UserRepositoryResponse> GetByUserNameAndPasswordAsync(string username, string password)
         {
             return await ValidateCredentials(x => x.Login.Equals(username), password);
         }
@@ -34,7 +34,7 @@ namespace Infrastructure.Repositroy
             return await _identityDbContext.Users.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<ERegistrationStatus> RegisterUserAsync(User user)
+        public async Task<ERegistrationStatus> CreateUserAsync(User user)
         {
             if (await CheckIfUserExits(user))
             {
@@ -77,6 +77,16 @@ namespace Infrastructure.Repositroy
         private async Task<bool> CheckIfUserExits(User user)
         {
             return await _identityDbContext.Users.Where(x => x.Login== user.Login || x.Email == user.Email).AnyAsync();
+        }
+
+        public async Task<User> GetByUserNameAsync(string userName)
+        {
+            return await _identityDbContext.Users.FirstOrDefaultAsync(x => x.Name.Equals(userName));
+        }
+
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            return await _identityDbContext.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
         }
     }
 }

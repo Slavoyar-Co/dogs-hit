@@ -6,11 +6,13 @@ using System.Text;
 
 namespace IdentityService.ServiceExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static class AuthenticationServiceCollectionExtensions
     {
         public static IServiceCollection AddAuthenticationProviders(this IServiceCollection services, string key)
         {
-            services.AddTransient<IJwtAuthentificationManager, JwtAuthentificationManager>();
+            services.AddSingleton<IJwtManager, JwtManager>();
+            services.AddSingleton<IGoogleAuthManager, GoogleAuthManager>();
+            services.AddTransient<IAuthenticationService, AuthenticationService>();
 
             services.AddAuthentication(options =>
             {
@@ -31,10 +33,15 @@ namespace IdentityService.ServiceExtensions
                     ValidateLifetime = true,
                     LifetimeValidator = LifetimeValidator
                 };
-            });
+            })
+            .AddGoogle(options =>
+            {
+                options.ClientId = "922665812793-7cbic7c0807hcqljk06q7k9mtdet21p2.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+            }); 
 
 
-            //TODO add external providers
+
 
             return services;
         }

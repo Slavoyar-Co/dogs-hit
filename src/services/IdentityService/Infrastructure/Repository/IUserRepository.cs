@@ -7,8 +7,10 @@ namespace Infrastructure.Repository
 {
     public interface IUserRepository : IAsyncRepositoryBase<User>
     {
-        public Task<UserRepositoryResponse> GetByUserNameAsync(string username, string password);
-        public Task<UserRepositoryResponse> GetByEmailAsync(string email, string password);
-        public Task<ERegistrationStatus> RegisterUserAsync(User user);
+        public Task<UserRepositoryResponse> GetByUserNameAndPasswordAsync(string useName, string password);
+        public Task<UserRepositoryResponse> GetByEmailAndPasswordAsync(string email, string password);
+        public Task<User> GetByUserNameAsync(string userName);
+        public Task<User> GetByEmailAsync(string email);
+        public Task<ERegistrationStatus> CreateUserAsync(User user);
     }
 }
